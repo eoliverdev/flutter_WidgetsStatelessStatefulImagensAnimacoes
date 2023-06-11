@@ -1,4 +1,6 @@
 import 'package:first_project/components/task.dart';
+import 'package:first_project/data/task_inherited.dart';
+import 'package:first_project/screens/form_screen.dart';
 import 'package:flutter/material.dart';
 
 class InitialScreen extends StatefulWidget {
@@ -9,7 +11,6 @@ class InitialScreen extends StatefulWidget {
 }
 
 class _InitialScreenState extends State<InitialScreen> {
-  bool opacidade = true;
 
   @override
   Widget build(BuildContext context) {
@@ -17,26 +18,18 @@ class _InitialScreenState extends State<InitialScreen> {
       appBar: AppBar(
         title: const Text('Tarefas'),
       ),
-      body: AnimatedOpacity(
-        opacity: (opacidade) ? 1 : 0,
-        duration: const Duration(milliseconds: 1000),
-        child: ListView(
-          children: const [
-            Task('Aprender Flutter', 'assets/images/Eu7m692XIAEvxxP.png', 3),
-            Task('Andar de Bike', 'assets/images/images.png', 2),
-            Task('Meditar', 'assets/images/plena-e1579805752463.jpg', 4),
-            Task('Jogar', 'assets/images/jogos-825x450px.webp', 1),
-            Task('Meditar na hora do almoço em dia de trabalho', 'assets/images/meditacao-no-trabalho-97077984.webp', 5),
-            SizedBox(height: 80)
-          ],
-        ),
+      body: ListView(
+        children: TaskInherited.of(context).taskList,
+        padding: EdgeInsets.only(top:8, bottom: 70),
       ),
-      floatingActionButton: FloatingActionButton(onPressed: (){
-        setState(() {
-          opacidade = !opacidade;
-        });
-      },
-          child: const Icon(Icons.remove_red_eye)
+      floatingActionButton: FloatingActionButton(
+          onPressed: (){
+            Navigator.push(context, MaterialPageRoute(
+                builder: (contextNew) => FormScreen(taskContext: context),
+              ),
+            );
+          },
+          child: const Icon(Icons.add)
       ),
     );
   }

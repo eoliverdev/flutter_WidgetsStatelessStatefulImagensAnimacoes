@@ -1,15 +1,16 @@
 import 'package:first_project/components/difficulty.dart';
+import 'package:first_project/data/task_dao.dart';
 import 'package:flutter/material.dart';
 
 
 class Task extends StatefulWidget {
-  final String nome;
-  final String foto;
-  final int dificuldade;
+  final String name;
+  final String image;
+  final int difficulty;
 
-  Task(this.nome, this.foto, this.dificuldade, {super.key});
+  Task(this.name, this.image, this.difficulty, {super.key});
 
-  int nivel = 0;
+  int level = 0;
 
   @override
   State<Task> createState() => _TaskState();
@@ -18,7 +19,7 @@ class Task extends StatefulWidget {
 class _TaskState extends State<Task> {
 
   bool assetOrNetwork(){
-    if(widget.foto.contains('http')){
+    if(widget.image.contains('http')){
       return false;
     }
     return true;
@@ -58,10 +59,10 @@ class _TaskState extends State<Task> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(4),
                           child: (assetOrNetwork()) ? Image.asset(
-                              widget.foto,
+                              widget.image,
                               fit: BoxFit.cover
                           ) : Image.network(
-                              widget.foto,
+                              widget.image,
                               fit: BoxFit.cover
                           ),
                         ),
@@ -73,19 +74,24 @@ class _TaskState extends State<Task> {
                           SizedBox(
                             width: 200,
                             child: Text(
-                              widget.nome,
+                              widget.name,
                               style: const TextStyle(fontSize: 18, overflow: TextOverflow.ellipsis),
                             ),
                           ),
-                          Difficulty(difficultyLevel: widget.dificuldade),
+                          Difficulty(difficultyLevel: widget.difficulty),
                         ],
                       ),
                       SizedBox(
                         height: 52,
                         width: 52,
-                        child: ElevatedButton(onPressed: (){
+                        child: ElevatedButton(
+                        onLongPress: (){
+                          TaskDao().delete(widget.name);
+                          print('Excluiu!');
+                        },
+                        onPressed: (){
                           setState(() {
-                            widget.nivel++;
+                            widget.level++;
                           });
                         }, child: const Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -107,14 +113,14 @@ class _TaskState extends State<Task> {
                       width: 200,
                       child: LinearProgressIndicator(
                         color: Colors.white,
-                        value: (widget.dificuldade > 0 ) ? (widget.nivel/widget.dificuldade)/10 : 1,
+                        value: (widget.difficulty > 0 ) ? (widget.level/widget.difficulty)/10 : 1,
                       ),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(12),
                     child: Text(
-                      'Nível: ${widget.nivel}',
+                      'Nível: ${widget.level}',
                       style: const TextStyle(color: Colors.white, fontSize: 16),
                     ),
                   ),
